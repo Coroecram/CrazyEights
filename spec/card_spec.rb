@@ -6,6 +6,7 @@ describe Card do
   let(:cardQS) { Card.new(:spades, :queen) }
   let(:cardKD) { Card.new(:diamonds, :king) }
   let(:cardeight) { Card.new(:hearts, :eight) }
+  let(:cardace) { Card.new(:spades, :ace) }
 
   describe "#same_suit?(other_card)" do
 
@@ -54,7 +55,7 @@ describe Card do
     end
 
     it "returns true for an ace no matter what" do
-      expect(cardeight.valid_match?(card3C)).to eq(true)
+      expect(cardace.valid_match?(card3C)).to eq(true)
     end
 
     it "returns false if non of the above are true" do
