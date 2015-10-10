@@ -49,29 +49,26 @@ class Card
   end
 
   def crazy?
-    @value == :eight
+
   end
 
   #this should be pretty self explanatory.
   def same_suit?(other_card)
-    self.suit == other_card.suit
+
   end
 
   #yep.
   def same_value?(other_card)
-    self.value == other_card.value
+
   end
 
   #if card can be played on top of the previous card in the discard pile
   def valid_match?(other_card)
-    return true if same_value?(other_card) || same_suit?(other_card)
-    return true if value == :eight
-    false
+
   end
 
   def set_suit(suit)
-    raise "cannot set suit of a non 8!" unless crazy?
-    @suit = suit
+
   end
 
   def to_s
