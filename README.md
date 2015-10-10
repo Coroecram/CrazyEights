@@ -4,7 +4,7 @@ For fun colors with colorize uncomment line 1 and line 79 in game.
 
 ## Rules
 
-* You have **HOWEVER THE FUCK LONG YOU WANT** for this fake assessment. Do not worry if you do not
+* You have **HOWEVER THE HECK LONG YOU WANT** for this fake assessment. Do not worry if you do not
   complete all the assessment; finish as much as you can.
 * Descriptions of each method to implement are written into the `lib/`
   files. For each `lib/` file, there is a corresponding `spec/` file.
