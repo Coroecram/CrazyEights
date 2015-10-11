@@ -39,7 +39,12 @@ class CrazyEightsGame
   end
 
   def over?
-    @players.any? { |player| player.hand_size == 0 } || @deck.count == 0
+    count = 0
+    @players.each do |player|
+      count += 1 if  player.hand_size > 0
+    end
+    return true if count == 1
+    false
   end
 
 end

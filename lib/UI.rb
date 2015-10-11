@@ -29,6 +29,7 @@ class Interface
     player.show_hand
     card_val = gets.chomp.upcase
     raise BadInputError.new if card_val == ""
+    return player.draw_check(deck) if card_val == "draw"
     card = player.valid_card?(card_val, deck)
     raise NoCardError.new if card == nil
     rescue NoCardError

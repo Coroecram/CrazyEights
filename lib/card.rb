@@ -102,9 +102,9 @@ class Card
 
   def to_s
     if suit == :hearts || suit == :diamonds
-      (VALUE_STRINGS[value] + SUIT_STRINGS[suit]).colorize(:red)
+      "| ".colorize(:color => :black, :background => :white) + (VALUE_STRINGS[value] + SUIT_STRINGS[suit]).colorize(:color => :red, :background => :white) + " |".colorize(:color => :black, :background => :white) + " "
     else
-      (VALUE_STRINGS[value] + SUIT_STRINGS[suit])
+      "| ".colorize(:color => :black, :background => :white) + (VALUE_STRINGS[value] + SUIT_STRINGS[suit]).colorize(:color => :black, :background => :white) + " |".colorize(:color => :black, :background => :white) + " "
     end
   end
 end

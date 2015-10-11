@@ -22,7 +22,7 @@ class Player
   def show_hand
     hand.each_with_index do |card, idx|
       puts "\n\n" if idx % 5 == 0
-      print " | #{card} |  "
+      print "#{card}"
     end
     puts
   end
@@ -44,6 +44,7 @@ class Player
   def valid_card?(card_val, deck)
     hand.each do |card|
       return card if card.string_value == card_val && card.suit == deck.last_discarded.suit
+      return card if card.string_value == card_val && card.value == deck.last_discarded.value
       return card if card.string_value == card_val && card.crazy?
     end
 
@@ -68,7 +69,6 @@ class Player
   def crazy_eights(eight, deck)
     hand.delete(eight)
     deck.discard(eight)
-    # byebug
     deck.discard(Card.new(set_suit, :suit_changer))
   end
 
