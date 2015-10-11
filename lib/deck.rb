@@ -46,9 +46,11 @@ class Deck
   end
 
   def reshuffle_discards
+    byebug
     discard_pile[0...-1].each do |card|
       cards << card unless card.value == :suit_changer
     end
+    discard_pile = [discard_pile.pop]
     shuffle!
   end
 
