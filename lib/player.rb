@@ -21,8 +21,8 @@ class Player
   end
 
   def draw_check(deck)
-    if has_play?
-      raise PlayError.new "Cannot draw with a valid play available."
+    if has_play?(deck)
+      raise PlayError.new "Cannot draw with an available play."
     else
       draw(deck)
       raise PlayError.new "You drew a #{hand.last}!"
@@ -57,7 +57,12 @@ class Player
     nil
   end
 
-  def has_play?
+  def has_play?(deck)
+    hand.each do |card|
+      return true if card.same_value?(deck.last_discarded) || card.same_suit?(deck.last_discarded)
+      return true if card.value == :eight
+    end
+
     false
   end
 
