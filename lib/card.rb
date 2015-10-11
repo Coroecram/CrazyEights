@@ -13,7 +13,7 @@ class Card
   }
 
   VALUE_STRINGS = {
-    :suit_changer => "0",
+    :suit_changer => "New suit: ",
     :deuce => "2",
     :three => "3",
     :four  => "4",
@@ -74,6 +74,10 @@ class Card
   #yep.
   def same_value?(other_card)
     self.value == other_card.value
+  end
+
+  def crazy?
+    self.value == :eight
   end
 
   def string_value

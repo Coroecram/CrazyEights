@@ -8,6 +8,7 @@ class CrazyEightsGame
     @players = players
     raise "this game will be terrible" if players.count < 2
     @deck = Deck.new
+    @interface = Interface.new
     @deck.shuffle
     @deck.show_top_card
   end
@@ -23,8 +24,7 @@ class CrazyEightsGame
     until over?
       system("clear")
       system('cls')  # windows
-      puts "#{current_player.name}'s turn:"
-      current_player.play_turn(@deck)
+      @interface.choose_move(current_player, @deck)
       next_turn
     end
     puts "Game over!"

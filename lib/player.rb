@@ -6,10 +6,9 @@ class Player
   attr_reader :name
   attr_accessor :hand
 
-  def initialize(name, interface = Interface.new)
+  def initialize(name)
     @name = name
     @hand = []
-    @interface = interface
   end
 
   def hand_size
@@ -18,6 +17,14 @@ class Player
 
   def draw(deck)
       hand << deck.draw
+  end
+
+  def show_hand
+    hand.each_with_index do |card, idx|
+      puts "\n\n" if idx % 5 == 0
+      print " | #{card} |  "
+    end
+    puts
   end
 
   def draw_check(deck)
@@ -29,29 +36,15 @@ class Player
     end
   end
 
-  def play_turn(deck)
-    move = @interface.choose_move(self, deck)
-    if move == "draw"
-      #get_cards(deck)
-    else
-      play_card(move)
-    end
-  end
-
   #in this version, you can only draw if you have no valid cards to play.
   def get_cards(deck)
     draw(deck)
   end
 
-  def play_card(card)
-
-
-  end
-
   def valid_card?(card_val, deck)
     hand.each do |card|
       return card if card.string_value == card_val && card.suit == deck.last_discarded.suit
-      return card if card.string_value == card_val && card_val == '8'
+      return card if card.string_value == card_val && card.crazy?
     end
 
     nil
@@ -66,25 +59,34 @@ class Player
     false
   end
 
-  def crazy?
-    self.value == :eight
+  def play_card(card, deck)
+    return crazy_eights(card, deck) if card.crazy?
+    hand.delete(card)
+    deck.discard(card)
   end
 
-  def crazy_eights
+  def crazy_eights(eight, deck)
+    hand.delete(eight)
+    deck.discard(eight)
+    # byebug
+    deck.discard(Card.new(set_suit, :suit_changer))
   end
 
-  def set_suit(crazy_eight)
-    begin
-      puts "What would you like to set the suit to?"
-      new_suit = gets.chomp
-      Card.suits.include?(new_suit)
-    rescue
-      retry
-    end
-    true
+  def set_suit
+    puts "What would you like to set the suit to?"
+    new_suit = gets.chomp.to_sym
+    raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(new_suit)
+    return new_suit
+  rescue NoSuitError => e
+    puts e.message
+    sleep 1.5
+    retry
   end
 
 end
 
 class PlayError < ArgumentError
+end
+
+class NoSuitError < ArgumentError
 end

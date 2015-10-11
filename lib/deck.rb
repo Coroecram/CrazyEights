@@ -49,6 +49,10 @@ class Deck
     discard_pile << draw
   end
 
+  def top_card
+    puts "Top of pile: #{last_discarded}"
+  end
+
   private
 
   attr_reader :cards
