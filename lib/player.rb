@@ -19,13 +19,12 @@ class Player
   end
 
   def play_turn(deck)
-    move = Interface.choose_move(self, deck)
-    if move = "draw"
+    move = @interface.choose_move(self, deck)
+    if move == "draw"
       get_cards(deck)
     else
       play_card(move)
     end
-
   end
 
   #in this version, you can only draw if you have no valid cards to play.
