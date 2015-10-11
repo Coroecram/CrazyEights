@@ -83,11 +83,13 @@ class Player
       suits << card.suit if card.value == possible_card.value
     end
     if suits.count > 1
-      puts "Which suit of #{possible_card.value}: suits.join(", ")?"
-      suit = gets.chomp.to_sym
-      raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(new_suit)
-      suit_pick(possible_card.value, suit)
+      puts "Which suit of #{possible_card.value}: #{suits.join(", ")}?"
+      suit_choice = gets.chomp.to_sym
+      raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(suit_choice)
+      raise NoCardError.new "You do not have a #{possible_card.value} of #{suit_choice}." unless suits.include?(suit_choice)
+      suit_pick(possible_card.value, suit_choice)
     else
+      possible_card
     end
   rescue NoSuitError => e
     puts e.message
@@ -103,8 +105,6 @@ class Player
     hand.each do |card|
       return card if card.value == value && card.suit == suit
     end
-
-    raise NoCardError.new "You do not have a #{value} of #{suit}."
   end
 
   def set_suit(value = nil)

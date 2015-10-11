@@ -4,14 +4,14 @@ class Interface
     begin
     choose_move_prompt(player, deck)
     input = gets.chomp.downcase
-    if input == "draw"
+    if input == "draw" || input =="d"
       player.draw_check(deck)
     else
-      raise BadInputError unless valid?(input)
+      raise BadInputError.new "That is not a valid choice." unless valid?(input)
       choose_card(player, deck)
     end
-    rescue BadInputError
-      puts "That is not a valid choice."
+  rescue BadInputError => e
+      puts e.message
       retry
     rescue HasPlayError => e
       puts e.message
@@ -32,7 +32,7 @@ class Interface
     puts "Which card would you like to play? Enter a number or J, Q, K, A: "
     player.show_hand
     card_val = gets.chomp.upcase
-    if card_val == "DRAW"
+    if card_val == "DRAW" || card_val == "D"
       player.draw_check(deck)
     else
       raise BadInputError.new if card_val == nil
