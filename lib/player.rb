@@ -1,4 +1,6 @@
 require_relative 'UI'
+require_relative 'card'
+require 'byebug'
 
 class Player
   attr_reader :name
@@ -18,10 +20,19 @@ class Player
       hand << deck.draw
   end
 
+  def draw_check(deck)
+    if has_play?
+      raise PlayError.new "Cannot draw with a valid play available."
+    else
+      draw(deck)
+      raise PlayError.new "You drew a #{hand.last}!"
+    end
+  end
+
   def play_turn(deck)
     move = @interface.choose_move(self, deck)
     if move == "draw"
-      get_cards(deck)
+      #get_cards(deck)
     else
       play_card(move)
     end
@@ -35,6 +46,19 @@ class Player
   def play_card(card)
 
 
+  end
+
+  def valid_card?(card_val, deck)
+    hand.each do |card|
+      return card if card.string_value == card_val && card.suit == deck.last_discarded.suit
+      return card if card.string_value == card_val && card_val == '8'
+    end
+
+    nil
+  end
+
+  def has_play?
+    false
   end
 
   def crazy?
@@ -55,4 +79,7 @@ class Player
     true
   end
 
+end
+
+class PlayError < ArgumentError
 end

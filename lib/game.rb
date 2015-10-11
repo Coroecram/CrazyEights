@@ -22,6 +22,7 @@ class CrazyEightsGame
     deal_to_players
     until over?
       system("clear")
+      system('cls')  # windows
       puts "#{current_player.name}'s turn:"
       current_player.play_turn(@deck)
       next_turn

@@ -76,6 +76,10 @@ class Card
     self.value == other_card.value
   end
 
+  def string_value
+    VALUE_STRINGS[value]
+  end
+
   # def value_int(card)
   #   VALUE_NUMBERS[card.value]
   # end
