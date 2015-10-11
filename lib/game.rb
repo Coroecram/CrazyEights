@@ -1,6 +1,7 @@
 require_relative 'card'
 require_relative 'deck.rb'
 require_relative 'player.rb'
+require 'byebug'
 
 class CrazyEightsGame
 
@@ -9,7 +10,6 @@ class CrazyEightsGame
     raise "this game will be terrible" if players.count < 2
     @deck = Deck.new
     @interface = Interface.new
-    @deck.shuffle
     @deck.show_top_card
   end
 

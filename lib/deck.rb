@@ -18,6 +18,7 @@ class Deck
   def initialize(cards = Deck.all_cards)
     @cards = cards
     @discard_pile = []
+    shuffle!
   end
 
   # Returns the number of cards in the deck.
@@ -25,8 +26,8 @@ class Deck
     cards.length
   end
 
-  def shuffle
-    cards.shuffle
+  def shuffle!
+    cards.shuffle!
   end
 
   def last_discarded
@@ -35,13 +36,20 @@ class Deck
 
   # Takes a card from the top of the deck, returns a card.
   def draw
-    raise "not enough cards" if cards.empty?
+    reshuffle_discards if count == 0
     cards.shift
   end
 
   # Allow players to place cards on the discard pile
   def discard(card)
     discard_pile << card
+  end
+
+  def reshuffle_discards
+    discard_pile[0...-1].each do |card|
+      cards << card unless card.value == :suit_changer
+    end
+    shuffle!
   end
 
   # puts top card of the deck in the discard pile
@@ -55,6 +63,6 @@ class Deck
 
   private
 
-  attr_reader :cards
+  attr_accessor :cards
 
 end
