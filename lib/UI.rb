@@ -61,11 +61,6 @@ class Interface
     input == "play" || input == "draw" || input == "p" || input == "d"
   end
 
-  def choose_suit
-    puts "Choose a suit! "
-    gets.chomp.to_sym
-  end
-
   def choose_move_prompt(player, deck)
     system("clear")
     system('cls')  # windows
@@ -92,11 +87,7 @@ class Interface
   def suits_check(player, possible_card)
     suits = player.available_suits(possible_card)
     if suits.count > 1
-      puts "Which suit of #{possible_card.value}: #{suits.join(", ")}?"
-      suit_choice = gets.chomp.to_sym
-      raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(suit_choice)
-      raise NoCardError.new "You do not have a #{possible_card.value} of #{suit_choice}." unless suits.include?(suit_choice)
-      player.suit_pick(possible_card.value, suit_choice)
+      return player.suit_pick(possible_card.value, suit_choice(suits, possible_card.value))
     else
       possible_card
     end
@@ -108,6 +99,14 @@ class Interface
     puts e.message
     sleep 1.5
     retry
+  end
+
+  def suit_choice(suits, value)
+    puts "Which suit of #{value}: #{suits.join(", ")}?"
+    suit_choice = gets.chomp.to_sym
+    raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(suit_choice)
+    raise NoCardError.new "You do not have a #{value} of #{suit_choice}." unless suits.include?(suit_choice)
+    suit_choice
   end
 
 end
