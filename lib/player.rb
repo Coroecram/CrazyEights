@@ -29,10 +29,10 @@ class Player
 
   def draw_check(deck)
     if has_play?(deck)
-      raise PlayError.new "Cannot draw with an available play."
+      raise HasPlayError.new "Cannot draw with an available play."
     else
       draw(deck)
-      raise PlayError.new "You drew a #{hand.last}!"
+      raise NoPlayError.new "You drew a #{hand.last}!"
     end
   end
 
@@ -42,10 +42,14 @@ class Player
   end
 
   def valid_card?(card_val, deck)
-    hand.each do |card|
-      return card if card.string_value == card_val && card.suit == deck.last_discarded.suit
-      return card if card.string_value == card_val && card.value == deck.last_discarded.value
-      return card if card.string_value == card_val && card.crazy?
+    if card_val == "draw"
+      draw_check(deck)
+    else
+      hand.each do |card|
+        return card if card.string_value == card_val && card.suit == deck.last_discarded.suit
+        return card if card.string_value == card_val && card.value == deck.last_discarded.value
+        return card if card.string_value == card_val && card.crazy?
+      end
     end
 
     nil
@@ -85,7 +89,10 @@ class Player
 
 end
 
-class PlayError < ArgumentError
+class HasPlayError < ArgumentError
+end
+
+class NoPlayError < ArgumentError
 end
 
 class NoSuitError < ArgumentError

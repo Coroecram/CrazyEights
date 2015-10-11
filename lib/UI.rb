@@ -13,7 +13,7 @@ class Interface
     rescue BadInputError
       puts "That is not a valid choice."
       retry
-    rescue PlayError => e
+    rescue HasPlayError => e
       puts e.message
       sleep 2
       retry
@@ -28,16 +28,28 @@ class Interface
     puts "Which card would you like to play? Enter a number or J, Q, K, A: "
     player.show_hand
     card_val = gets.chomp.upcase
-    raise BadInputError.new if card_val == ""
-    return player.draw_check(deck) if card_val == "draw"
-    card = player.valid_card?(card_val, deck)
-    raise NoCardError.new if card == nil
-    rescue NoCardError
+    if card_val == "DRAW"
+      player.draw_check(deck)
+    else
+      raise BadInputError.new if card_val == ""
+      card = player.valid_card?(card_val, deck)
+      raise NoCardError.new "That is not a card you can play." if card == nil
+    end
+  rescue NoCardError => e
       puts
-      puts "That is not a card you can play."; sleep 1.7; puts
+      puts e.message
+      sleep 1.7
       retry
     rescue BadInputError
         retry
+    rescue NoPlayError => e
+      puts e.message
+      sleep 2
+      choose_move(player, deck)
+    rescue HasPlayError => e
+      puts e.message
+      sleep 2
+      retry
     end
     player.play_card(card, deck)
   end
