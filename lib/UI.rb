@@ -76,7 +76,39 @@ class Interface
     player.show_hand
   end
 
+  def set_suit(value = nil)
+    puts "What would you like to set the suit to?"
+    new_suit = gets.chomp.to_sym
+    raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(new_suit)
+    return suit_pick(value, new_suit) unless value == nil
+    return new_suit
+  rescue NoSuitError => e
+    puts e.message
+    sleep 1.5
+    retry
+  end
 
+  #in case you have more than 1 card of the same value and want to select of which suit to play
+  def suits_check(player, possible_card)
+    suits = player.available_suits(possible_card)
+    if suits.count > 1
+      puts "Which suit of #{possible_card.value}: #{suits.join(", ")}?"
+      suit_choice = gets.chomp.to_sym
+      raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(suit_choice)
+      raise NoCardError.new "You do not have a #{possible_card.value} of #{suit_choice}." unless suits.include?(suit_choice)
+      player.suit_pick(possible_card.value, suit_choice)
+    else
+      possible_card
+    end
+  rescue NoSuitError => e
+    puts e.message
+    sleep 1.5
+    retry
+  rescue NoCardError => e
+    puts e.message
+    sleep 1.5
+    retry
+  end
 
 end
 
@@ -84,4 +116,10 @@ class BadInputError < ArgumentError
 end
 
 class HasPlayError < ArgumentError
+end
+
+class NoCardError < ArgumentError
+end
+
+class NoSuitError < ArgumentError
 end

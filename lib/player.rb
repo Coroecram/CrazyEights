@@ -3,12 +3,13 @@ require_relative 'card'
 require 'byebug'
 
 class Player
-  attr_reader :name
+  attr_reader :name, :interface
   attr_accessor :hand
 
-  def initialize(name)
+  def initialize(name, interface = Interface.new)
     @name = name
     @hand = []
+    @interface = interface
   end
 
   def hand_size
@@ -48,7 +49,7 @@ class Player
       hand.each do |card|
         return card if card.string_value == card_val && card.suit == deck.last_discarded.suit
         return card if card.string_value == card_val && card.crazy?
-        return suits_check(card) if card.string_value == card_val && card.value == deck.last_discarded.value
+        return interface.suits_check(self, card) if card.string_value == card_val && card.value == deck.last_discarded.value
       end
     end
 
@@ -73,32 +74,17 @@ class Player
   def crazy_eights(eight, deck)
     hand.delete(eight)
     deck.discard(eight)
-    deck.discard(Card.new(set_suit, :suit_changer))
+    deck.discard(Card.new(interface.set_suit, :suit_changer))
   end
 
-  #in case you have more than 1 card of the same value and want to select of which suit to play
-  def suits_check(possible_card)
+
+
+  def available_suits(possible_card)
     suits = []
     hand.each do |card|
       suits << card.suit if card.value == possible_card.value
     end
-    if suits.count > 1
-      puts "Which suit of #{possible_card.value}: #{suits.join(", ")}?"
-      suit_choice = gets.chomp.to_sym
-      raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(suit_choice)
-      raise NoCardError.new "You do not have a #{possible_card.value} of #{suit_choice}." unless suits.include?(suit_choice)
-      suit_pick(possible_card.value, suit_choice)
-    else
-      possible_card
-    end
-  rescue NoSuitError => e
-    puts e.message
-    sleep 1.5
-    retry
-  rescue NoCardError => e
-    puts e.message
-    sleep 1.5
-    retry
+    suits
   end
 
   def suit_pick(value, suit)
@@ -107,17 +93,7 @@ class Player
     end
   end
 
-  def set_suit(value = nil)
-    puts "What would you like to set the suit to?"
-    new_suit = gets.chomp.to_sym
-    raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(new_suit)
-    return suit_pick(value, new_suit) unless value == nil
-    return new_suit
-  rescue NoSuitError => e
-    puts e.message
-    sleep 1.5
-    retry
-  end
+
 
 end
 
@@ -125,10 +101,4 @@ class HasPlayError < ArgumentError
 end
 
 class NoPlayError < ArgumentError
-end
-
-class NoCardError < ArgumentError
-end
-
-class NoSuitError < ArgumentError
 end
