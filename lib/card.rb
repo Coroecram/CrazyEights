@@ -13,6 +13,7 @@ class Card
   }
 
   VALUE_STRINGS = {
+    :suit_changer => "0",
     :deuce => "2",
     :three => "3",
     :four  => "4",
@@ -28,21 +29,22 @@ class Card
     :ace   => "A"
   }
 
-  VALUE_NUMBERS = {
-    :deuce => 2,
-    :three => 3,
-    :four  => 4,
-    :five  => 5,
-    :six   => 6,
-    :seven => 7,
-    :eight => 8,
-    :nine  => 9,
-    :ten   => 10,
-    :jack  => 11,
-    :queen => 12,
-    :king  => 13,
-    :ace   => 1
-  }
+  # VALUE_NUMBERS = {
+  #   :suit_changer => 0,
+  #   :ace   => 1,
+  #   :deuce => 2,
+  #   :three => 3,
+  #   :four  => 4,
+  #   :five  => 5,
+  #   :six   => 6,
+  #   :seven => 7,
+  #   :eight => 8,
+  #   :nine  => 9,
+  #   :ten   => 10,
+  #   :jack  => 11,
+  #   :queen => 12,
+  #   :king  => 13
+  # }
 
   # Returns an array of all suits.
   def self.suits
@@ -57,7 +59,7 @@ class Card
   attr_reader :suit, :value
 
   def initialize(suit, value)
-    unless Card.suits.include?(suit) and Card.values.include?(value)
+    unless Card.suits.include?(suit) && (Card.values.include?(value) || value == :suit_changer)
       raise "illegal suit (#{suit}) or value (#{value})"
     end
 
@@ -78,19 +80,32 @@ class Card
     self.value == other_card.value
   end
 
-  def value_int(card)
-    VALUE_NUMBERS[card.value]
-  end
+  # def value_int(card)
+  #   VALUE_NUMBERS[card.value]
+  # end
 
   #if card can be played on top of the previous card in the discard pile
   def valid_match?(other_card)
+    return true if value == :suit_changer
     return true if value == :ace
-    return true if same_value?(other_card) || (same_suit?(other_card) && value_int(self) < value_int(other_card))
-    set_suit if value == :eight
+    set_suit(self) if crazy?
+    return true if same_value?(other_card) || same_suit?(other_card)
+    false
   end
 
-  def set_suit(suit)
+  # def valid_place?(top_of_pile, card)
+  #   (card.same_suit?(top_of_pile) && value_int(card) < value_int(top_of_pile))
+  # end
 
+  def set_suit(crazy_eight)
+    begin
+      puts "What would you like to set the suit to?"
+      new_suit = gets.chomp
+      Card.suits.include?(new_suit)
+    rescue
+      retry
+    end
+    true
   end
 
   def to_s
