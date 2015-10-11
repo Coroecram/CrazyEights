@@ -15,7 +15,11 @@ class Interface
       retry
     rescue HasPlayError => e
       puts e.message
-      sleep 2
+      sleep 1.5
+      retry
+    rescue NoPlayError => e
+      puts e.message
+      sleep 1.5
       retry
     end
   end
@@ -31,9 +35,8 @@ class Interface
     if card_val == "DRAW"
       player.draw_check(deck)
     else
-      raise BadInputError.new if card_val == ""
+      raise BadInputError.new if card_val == nil
       card = player.valid_card?(card_val, deck)
-      raise NoCardError.new "That is not a card you can play." if card == nil
     end
   rescue NoCardError => e
       puts
@@ -44,11 +47,11 @@ class Interface
         retry
     rescue NoPlayError => e
       puts e.message
-      sleep 2
-      choose_move(player, deck)
+      sleep 1.5
+      return choose_move(player, deck)
     rescue HasPlayError => e
       puts e.message
-      sleep 2
+      sleep 1.5
       retry
     end
     player.play_card(card, deck)
@@ -57,8 +60,6 @@ class Interface
   def valid?(input)
     input == "play" || input == "draw" || input == "p" || input == "d"
   end
-
-
 
   def choose_suit
     puts "Choose a suit! "
@@ -75,9 +76,8 @@ class Interface
     player.show_hand
   end
 
-end
 
-class NoCardError < ArgumentError
+
 end
 
 class BadInputError < ArgumentError

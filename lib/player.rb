@@ -47,12 +47,12 @@ class Player
     else
       hand.each do |card|
         return card if card.string_value == card_val && card.suit == deck.last_discarded.suit
-        return card if card.string_value == card_val && card.value == deck.last_discarded.value
         return card if card.string_value == card_val && card.crazy?
+        return suits_check(card) if card.string_value == card_val && card.value == deck.last_discarded.value
       end
     end
 
-    nil
+    raise NoCardError.new "That is not a card you can play."
   end
 
   def has_play?(deck)
@@ -76,10 +76,42 @@ class Player
     deck.discard(Card.new(set_suit, :suit_changer))
   end
 
-  def set_suit
+  #in case you have more than 1 card of the same value and want to select of which suit to play
+  def suits_check(possible_card)
+    suits = []
+    hand.each do |card|
+      suits << card.suit if card.value == possible_card.value
+    end
+    if suits.count > 1
+      puts "Which suit of #{possible_card.value}: suits.join(", ")?"
+      suit = gets.chomp.to_sym
+      raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(new_suit)
+      suit_pick(possible_card.value, suit)
+    else
+    end
+  rescue NoSuitError => e
+    puts e.message
+    sleep 1.5
+    retry
+  rescue NoCardError => e
+    puts e.message
+    sleep 1.5
+    retry
+  end
+
+  def suit_pick(value, suit)
+    hand.each do |card|
+      return card if card.value == value && card.suit == suit
+    end
+
+    raise NoCardError.new "You do not have a #{value} of #{suit}."
+  end
+
+  def set_suit(value = nil)
     puts "What would you like to set the suit to?"
     new_suit = gets.chomp.to_sym
     raise NoSuitError.new "That is not a valid suit" unless Card.suits.include?(new_suit)
+    return suit_pick(value, new_suit) unless value == nil
     return new_suit
   rescue NoSuitError => e
     puts e.message
@@ -93,6 +125,9 @@ class HasPlayError < ArgumentError
 end
 
 class NoPlayError < ArgumentError
+end
+
+class NoCardError < ArgumentError
 end
 
 class NoSuitError < ArgumentError

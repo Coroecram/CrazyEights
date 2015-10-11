@@ -44,7 +44,7 @@ class CrazyEightsGame
       count += 1 if  player.hand_size > 0
     end
     return true if count == 1
-    false
+    
   end
 
 end
