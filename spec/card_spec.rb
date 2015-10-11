@@ -75,10 +75,10 @@ describe Card do
 
   describe "#set_suit(suit)" do
 
-    it "changes the suit of an crazy 8" do
-      cardeight.set_suit(:diamonds)
-      expect(cardeight.suit).to eq(:diamonds)
-    end
+    # it "changes the suit of an crazy 8" do
+    #   cardeight.set_suit(:diamonds)
+    #   expect(cardeight.suit).to eq(:diamonds)
+    # end
 
     it "throws an error if you try to change the suit of a non-crazy card" do
       # expect{card3C.set_suit}.to raise_error
