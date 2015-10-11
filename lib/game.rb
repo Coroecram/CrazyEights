@@ -23,8 +23,6 @@ class CrazyEightsGame
     until over?
       system("clear")
       puts "#{current_player.name}'s turn:"
-      puts "Match the suit or value, play an eight, or draw a new card!"
-      puts @deck.last_discarded
       current_player.play_turn(@deck)
       next_turn
     end

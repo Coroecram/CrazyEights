@@ -66,10 +66,6 @@ class Card
     @suit, @value = suit, value
   end
 
-  def crazy?
-    self.value == :eight
-  end
-
   #this should be pretty self explanatory.
   def same_suit?(other_card)
     self.suit == other_card.suit
@@ -88,7 +84,6 @@ class Card
   def valid_match?(other_card)
     return true if value == :suit_changer
     return true if value == :ace
-    set_suit(self) if crazy?
     return true if same_value?(other_card) || same_suit?(other_card)
     false
   end
@@ -96,17 +91,6 @@ class Card
   # def valid_place?(top_of_pile, card)
   #   (card.same_suit?(top_of_pile) && value_int(card) < value_int(top_of_pile))
   # end
-
-  def set_suit(crazy_eight)
-    begin
-      puts "What would you like to set the suit to?"
-      new_suit = gets.chomp
-      Card.suits.include?(new_suit)
-    rescue
-      retry
-    end
-    true
-  end
 
   def to_s
     if suit == :hearts || suit == :diamonds
